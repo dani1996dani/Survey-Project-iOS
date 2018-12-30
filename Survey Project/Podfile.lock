@@ -1,0 +1,20 @@
+PODS:
+  - SearchTextField (1.2.2)
+  - Starscream (3.0.6)
+
+DEPENDENCIES:
+  - SearchTextField
+  - Starscream (~> 3.0.2)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SearchTextField
+    - Starscream
+
+SPEC CHECKSUMS:
+  SearchTextField: a0992739d4b05dcbb40fb3a5cc6526bd991bdd23
+  Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
+
+PODFILE CHECKSUM: 7b49823a05d6fa1193ffe10f6f66d505e04864f3
+
+COCOAPODS: 1.5.3
