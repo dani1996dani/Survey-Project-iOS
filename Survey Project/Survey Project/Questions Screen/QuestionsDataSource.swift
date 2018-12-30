@@ -18,6 +18,7 @@ class QuestionsDataSource{
     
     var httpErrorDelegate : HttpErrorDelegate?
     
+    ///gets the latest questions from the server, returning [Question] to the completion handler.
     func getRecentQuestions(limit: Int,completion : @escaping ([Question]) -> ()){
         let urlString = "\(WebConnectionSettings.HTTP_PROTOCOL)\(WebConnectionSettings.HOST)\(WebConnectionSettings.QUESTION_SERVLET)?action=get_questions"
         let url = URL(string: urlString)!
@@ -43,6 +44,7 @@ class QuestionsDataSource{
         task.resume()
     }
     
+    ///gets the latest filtered questions from the server, returning [Question] to the completion handler.
     func getFilteredQuestions(limit: Int,using filter : String,completion : @escaping ([Question]) -> ()){
         var urlString = "\(WebConnectionSettings.HTTP_PROTOCOL)\(WebConnectionSettings.HOST)\(WebConnectionSettings.QUESTION_SERVLET)?action=get_questions&filter_by=\(filter)"
         urlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
@@ -68,6 +70,10 @@ class QuestionsDataSource{
         task.resume()
     }
     
+    ///parses questions from json
+    ///- parameters:
+    ///     - data: the json to parse
+    ///- returns: [Question] parsed from data
     func parseQuestionsFromJSON(data : Data) -> [Question]{
         let jsonResult = try! JSONSerialization.jsonObject(with: data, options: []) as! JSONArray
         
@@ -81,6 +87,10 @@ class QuestionsDataSource{
         
     }
     
+    ///parses one question from json
+    ///- parameters:
+    ///     - data: the json to parse
+    ///- returns: Question parsed from data
     func parseQuestion(from json : JSON) -> Question{
         let user = json["askingUser"] as! JSON
         let userId = user["userId"] as! Int

@@ -18,6 +18,7 @@ class NewQuestionSubmitDelegate{
     
     static let shared = NewQuestionSubmitDelegate()
     
+    ///submits a new question to the server, sending back the response to the completion handler.
     func submitNewQuestion(question : NewQuestion,completion: @escaping (String) -> ()){
         let urlString = "\(WebConnectionSettings.HTTP_PROTOCOL)\(WebConnectionSettings.HOST)\(WebConnectionSettings.QUESTION_SERVLET)"
         

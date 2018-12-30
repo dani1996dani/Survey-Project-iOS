@@ -11,7 +11,10 @@ import UIKit
 class QuestionsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    
+    //the last time of reloading the tableview, to calculate the time passed from the question being asked to now
     var timeOfReload : TimeInterval = 0
+    
     var isFiltered = false
     var filterText = ""
     let refreshControl = UIRefreshControl()
@@ -44,6 +47,7 @@ class QuestionsViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    ///refreshes the content of the tableview with new questions
     @objc func refresh(){
         if !isFiltered{
             loadQuestions(showBlur: false)
@@ -58,7 +62,6 @@ class QuestionsViewController: UIViewController {
         super.viewWillAppear(true)
         
         if questions.isEmpty{
-            print("trying to load already")
             refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
             refreshControl.attributedTitle = NSAttributedString(string: "Refreshing...")
             if #available(iOS 10.0, *) {
@@ -81,6 +84,7 @@ class QuestionsViewController: UIViewController {
         
     }
     
+    ///gets new questions from the question data source
     func loadQuestions(showBlur : Bool){
         if showBlur{
             self.view.showBlurLoader()
@@ -92,7 +96,10 @@ class QuestionsViewController: UIViewController {
             }
         }
     }
-    
+     ///gets new filtered questions from the question data source
+    ///- parameters:
+    ///     - filter: the String to filter questions by
+    ///     - showBlur: should show blur or not while fetching new questions.
     func loadFilteredQuestions(with filter : String,showBlur : Bool){
         if showBlur{
             self.view.showBlurLoader()
@@ -105,6 +112,7 @@ class QuestionsViewController: UIViewController {
         }
     }
     
+    ///resets the tableview to unfiltered mode
     func resetQuestions(){
         isFiltered = false
         self.tableView.reloadData()
@@ -113,7 +121,6 @@ class QuestionsViewController: UIViewController {
 
 extension QuestionsViewController : UISearchBarDelegate{
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        //        searchBar.showsCancelButton = true
         searchBar.setShowsCancelButton(true, animated: true)
     }
     
@@ -131,14 +138,12 @@ extension QuestionsViewController : UISearchBarDelegate{
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         var searchText = searchBar.text ?? ""
         searchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        print(searchText)
         searchBar.resignFirstResponder()
         if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton{
             searchBar.setShowsCancelButton(true, animated: true)
             cancelButton.isEnabled = true
         }
         
-//        self.view.showBlurLoader()
         filterText = searchText
         loadFilteredQuestions(with: searchText, showBlur: true)
     }
@@ -153,7 +158,8 @@ extension QuestionsViewController : UITableViewDelegate{
         else{
             question = filteredQuestions[indexPath.row]
         }
-        print(question.title,question.votes)
+
+        //segues to the DetailQuestionViewController to show the question.
         performSegue(withIdentifier: "question_detail", sender: question)
     }
 }
@@ -204,6 +210,8 @@ extension QuestionsViewController : UITableViewDataSource{
 }
 
 extension QuestionsViewController : HttpErrorDelegate{
+    
+    ///handles loss of http connection
     func onError(erroredIn: Any) {
         let alertController = UIAlertController(title: "Lost Connection", message: "Unable to reach our servers.", preferredStyle: .alert)
         let reconnectAction = UIAlertAction(title: "Retry Connection", style: .default) { (_) in

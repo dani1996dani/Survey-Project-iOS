@@ -15,12 +15,9 @@ class MyProfileViewController: UIViewController {
             loadUIMetadata()
         }
     }
-    
-    
+ 
     @IBOutlet weak var navigationTitle: UINavigationItem!
-    
     @IBOutlet weak var voteAmountLabel: UILabel!
-    
     @IBOutlet weak var questionAmountLabel: UILabel!
     
     var myQuestions : [Question] = [] {
@@ -29,9 +26,7 @@ class MyProfileViewController: UIViewController {
         }
     }
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet var profileMetadataViews: [UIView]!
-    
     
     static var shouldReloadQuestions = true
     static var shouldReloadProfileMetadata = true
@@ -50,22 +45,17 @@ class MyProfileViewController: UIViewController {
         didSet {
             if loadingElements == 0{
                 shouldShowLoading = false
-                print(loadingElements)
-                
             }
             else if loadingElements > 0{
                 if !shouldShowLoading{
                     shouldShowLoading = true
                 }
-                print(loadingElements)
             }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
     }
     
     
@@ -74,31 +64,30 @@ class MyProfileViewController: UIViewController {
         loadData()
     }
     
+    /**
+        Load the profile metadata, and loads the users questions.
+    */
     func loadData(){
         let profileDataSource = ProfileDataSource.shared
-        
-        
+
             loadingElements += 1
             profileDataSource.getProfileMetadata { (profileMetadata) in
                 self.profileMetadata = profileMetadata
                 self.loadingElements -= 1
                 MyProfileViewController.shouldReloadProfileMetadata = false
-                
-                
             }
 
-        
-        
-//        if MyProfileViewController.shouldReloadQuestions{
             loadingElements += 1
             profileDataSource.getMyQuestions{(questions) in
                 self.myQuestions = questions
                 MyProfileViewController.shouldReloadQuestions = false
                 self.loadingElements -= 1
             }
-//        }
     }
     
+    /**
+     Updates the UI when the metadata object is updated.
+     */
     func loadUIMetadata(){
         voteAmountLabel.text = profileMetadata.voteText
         questionAmountLabel.text = profileMetadata.questionText
@@ -107,13 +96,12 @@ class MyProfileViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //segue to the QuestionDetailViewController when a user taps his own question for further viewing.
         if (segue.identifier == "goto_question_detail"){
             let dest = segue.destination as! QuestionDetailViewController
             dest.question = sender as! Question
         }
     }
-    
-    
 }
 
 extension MyProfileViewController : UITableViewDelegate{
@@ -130,6 +118,8 @@ extension MyProfileViewController : UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        //sends the user to DetailQuestionViewController, to show him his question.
         let question = myQuestions[indexPath.row]
         print(question.title,question.votes)
         performSegue(withIdentifier: "goto_question_detail", sender: question)

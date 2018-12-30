@@ -14,6 +14,9 @@ class ProfileDataSource{
     
     static let shared = ProfileDataSource()
     
+    /**
+     Queries the server for the users recent questions, and returns [Question] in the completion handler.
+     */
     func getMyQuestions(completion: @escaping ([Question])->()){
         let token = Auth.userToken
         let action = "get_user_questions"
@@ -23,8 +26,10 @@ class ProfileDataSource{
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             
+            if error != nil{
+                return
+            }
             guard let data = data else {return;}
-            print(String(data: data, encoding: .utf8))
             var questions = [Question]()
             
             let jsonArray = try! JSONSerialization.jsonObject(with: data, options: []) as! JSONArray
@@ -44,7 +49,9 @@ class ProfileDataSource{
     }
     
     
-    
+    /**
+     Queries the server for the users metadata, and returns ProfileMetada in the completion handler.
+     */
     func getProfileMetadata(completion: @escaping (ProfileMetadata)->()){
         let token = Auth.userToken
         let action = "profile_metadata"
@@ -53,6 +60,9 @@ class ProfileDataSource{
         let url = URL(string: urlString)!
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if error != nil{
+                return
+            }
             guard let data = data else{return;}
             
             let profileMetadata = self.parseProfileMetadata(from: data)
@@ -65,6 +75,11 @@ class ProfileDataSource{
         
         task.resume()
     }
+    
+    ///Parses a json that contains user metadata
+    ///- parameters:
+    ///    - jsondata: the json to parse
+    ///- returns: ProfileMetadata constructed from the json
     
     func parseProfileMetadata(from jsondata : Data) -> ProfileMetadata{
         let json = try! JSONSerialization.jsonObject(with: jsondata, options: []) as! JSON

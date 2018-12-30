@@ -24,10 +24,6 @@ class NewQuestionViewController: UIViewController {
     
     
     @IBOutlet weak var scrollContentView: UIView!
-    
-    @IBOutlet weak var scrollContentViewHeightConstraint: NSLayoutConstraint!
-    
-    
     @IBOutlet weak var questionField: PaddedTextField!
     @IBOutlet var answerFieldCollection: [UITextField]!
     @IBOutlet weak var questionCategoryField: SearchTextField!
@@ -48,10 +44,13 @@ class NewQuestionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        clearTextFields()
+        initUI()
         
     }
     
+    ///
+    /// Calls the new questions data source to fetch new questions.
+    ///
     func getCategories(){
         let newQuestionsDataSource = NewQuestionDataSource.shared
         newQuestionsDataSource.httpErrorDelegate = self
@@ -63,14 +62,13 @@ class NewQuestionViewController: UIViewController {
     
     
     
-    
-    func clearTextFields(){
+    ///restarts the UI to its 'clean' state
+    func initUI(){
         self.view.removeBluerLoader()
         self.scrollVIew.scrollToTop()
         self.instructionTextView.textColor = UIColor.black
         visibleAnswers = 2
         addAnswerButton.isEnabled = true
-        print("in clear")
         questionField.text = ""
         questionCategoryField.text = ""
         for index in 0..<answerFieldCollection.count{
@@ -81,6 +79,7 @@ class NewQuestionViewController: UIViewController {
         }
     }
     
+    ///gets called when the user taps the + navigation item.
     @IBAction func addAnswer(_ sender: Any) {
         if visibleAnswers < answerFieldCollection.count{
             answerFieldCollection[visibleAnswers].isHidden = false
@@ -91,7 +90,7 @@ class NewQuestionViewController: UIViewController {
         }
       
     }
-    
+    ///inits the question category input
     func initCustomSearchField(){
         questionCategoryField.inlineMode = true
         questionCategoryField.layer.borderColor = UIColor.darkGray.cgColor
@@ -99,6 +98,7 @@ class NewQuestionViewController: UIViewController {
         questionCategoryField.layer.cornerRadius = 3
     }
     
+    ///setting the textfield delegates as the viewcontroller to handle keyboard hiding when return key is pressed.
     func initTextDelegate(){
         questionField.delegate = self
         for field in answerFieldCollection{
@@ -106,6 +106,7 @@ class NewQuestionViewController: UIViewController {
         }
     }
     
+    ///grab all answers from the possible answers inputs
     func grabAnswers() -> [String]{
         var answers : [String] = []
         for field in answerFieldCollection{
@@ -118,17 +119,19 @@ class NewQuestionViewController: UIViewController {
         return answers
     }
     
+    ///grabs the question input
     func grabQuestion() -> String{
         let inputString = questionField.text ?? ""
         return inputString
     }
     
+    ///grabs the category input
     func grabCategory() -> String{
         let inputString = questionCategoryField.text ?? ""
         return inputString
     }
     
-    
+    ///validates that all new question constraints are met, and if are continues to submit in submitQuestion()
     @IBAction func submitTapped(_ sender: UIButton) {
         
         let question = grabQuestion()
@@ -137,19 +140,16 @@ class NewQuestionViewController: UIViewController {
         
         if question.isEmpty{
             displayInstructionsAgain()
-            print("Empty question")
             return
         }
         
         if answers.count < 2{
             displayInstructionsAgain()
-            print("not enough answers")
             return
         }
         
         if category.isEmpty{
             displayInstructionsAgain()
-            print("not a proper category")
             return
         }
         
@@ -167,12 +167,12 @@ class NewQuestionViewController: UIViewController {
         newQuestion.categoryName = category
         newQuestion.askerToken = Auth.userToken
         
-        print(newQuestion.toJSON())
         NewQuestionSubmitDelegate.shared.httpErrorDelegate = self
         submitQuestion()
         self.view.showBlurLoader()
     }
     
+    ///submits the new question to the server, handles success and error responses
     func submitQuestion(){
         instructionTextView.textColor = UIColor.black
         NewQuestionSubmitDelegate.shared.submitNewQuestion(question: newQuestion){(response) in
@@ -185,7 +185,7 @@ class NewQuestionViewController: UIViewController {
             
         }
     }
-    
+    ///shakes the instruction textview and makes it red to indicate that the user is not meeting the conditions
     func displayInstructionsAgain(){
         scrollVIew.scrollToTop()
         instructionTextView.textColor = UIColor.red
@@ -199,7 +199,7 @@ class NewQuestionViewController: UIViewController {
         
         
     }
-    
+    ///alerts an error alert when an error response was received from the server on new question submition.
     func displaySubmitError(){
         let alertController = UIAlertController(title: "Error", message: "The question failed to be submitted.", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Try Again", style: .default, handler: { (_) in
@@ -210,7 +210,7 @@ class NewQuestionViewController: UIViewController {
         }))
         self.present(alertController, animated: true, completion: nil)
     }
-    
+    ///alerts a success alert when a success response was received from the server on new question submition.
     func displaySubmitSuccess(){
         let alertController = UIAlertController(title: "Success", message: "The question was received and proccessed! Thank you.", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Take me home", style: .default, handler: { (_) in
@@ -230,6 +230,7 @@ extension NewQuestionViewController : UITextFieldDelegate{
 }
 
 extension NewQuestionViewController : HttpErrorDelegate{
+    ///handling loss of connection mid-sumbition of new question
     func onError(erroredIn : Any) {
         let alertController = UIHttpError.shared.httpErrorAlert()
         let reconnectAction = UIAlertAction(title: "Retry Connection", style: .default) { (_) in

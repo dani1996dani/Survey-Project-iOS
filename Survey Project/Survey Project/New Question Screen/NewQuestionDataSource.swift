@@ -16,6 +16,7 @@ class NewQuestionDataSource{
     static let shared = NewQuestionDataSource()
     var httpErrorDelegate : HttpErrorDelegate?
     
+    ///returns a [String] of all category names available for questions.
     func getAllCategoriyNames(completion: @escaping ([String])->()){
         let urlString = "\(WebConnectionSettings.HTTP_PROTOCOL)\(WebConnectionSettings.HOST)\(WebConnectionSettings.QUESTION_SERVLET)?action=get_all_categories"
         let url = URL(string: urlString)!
@@ -40,6 +41,10 @@ class NewQuestionDataSource{
         task.resume()
     }
     
+    ///Parses [String] of category names, from json data
+    ///- parameters:
+    ///     - data: the json data to be parsed
+    ///- returns: [String] of category names available for a new question.
     func parseCategoryNames(data : Data) -> [String]{
         var names : [String] = []
         let json = try! JSONSerialization.jsonObject(with: data, options: []) as! JSON
