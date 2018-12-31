@@ -130,7 +130,7 @@
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Question Category..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cEp-z4-OJ3" customClass="SearchTextField" customModule="SearchTextField">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Question Category..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cEp-z4-OJ3" customClass="PaddedTextField" customModule="Survey_Project" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="160" width="343" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
@@ -235,7 +235,7 @@
                     <connections>
                         <outlet property="addAnswerButton" destination="9N8-z3-AXw" id="u1t-b3-P6C"/>
                         <outlet property="instructionTextView" destination="lTG-2z-YQL" id="bSa-Jv-e4F"/>
-                        <outlet property="questionCategoryField" destination="cEp-z4-OJ3" id="9ec-5m-7rL"/>
+                        <outlet property="questionCategoryField" destination="cEp-z4-OJ3" id="g37-kR-TFN"/>
                         <outlet property="questionField" destination="xvq-oc-vxE" id="vg9-DH-cG0"/>
                         <outlet property="scrollContentView" destination="PaB-aR-P8q" id="9vS-dW-qiC"/>
                         <outlet property="scrollVIew" destination="JU4-jj-o3b" id="Bxk-5v-J7d"/>
@@ -267,8 +267,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XFR-o1-bP9">
                                 <rect key="frame" x="0.0" y="64" width="187.5" height="133.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Votes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uTz-EM-m2h">
-                                        <rect key="frame" x="72" y="56" width="44" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Voted For" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uTz-EM-m2h">
+                                        <rect key="frame" x="56.5" y="56" width="74.5" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -804,7 +804,7 @@
         <image name="settings" width="36" height="36"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gDd-Lu-jHr"/>
+        <segue reference="z9O-le-AsR"/>
         <segue reference="Yv8-2T-YHe"/>
     </inferredMetricsTieBreakers>
 </document>

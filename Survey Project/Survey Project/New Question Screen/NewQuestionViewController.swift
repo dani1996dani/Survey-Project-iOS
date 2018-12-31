@@ -22,20 +22,24 @@ class NewQuestionViewController: UIViewController {
     let submitError = "Error"
     let submitSuccess = "Success"
     
+    var selectedCategory = ""
+    
     
     @IBOutlet weak var scrollContentView: UIView!
     @IBOutlet weak var questionField: PaddedTextField!
+    @IBOutlet weak var questionCategoryField: PaddedTextField!
     @IBOutlet var answerFieldCollection: [UITextField]!
-    @IBOutlet weak var questionCategoryField: SearchTextField!
+    
     var categoryNames : [String] = []
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initCustomSearchField()
+//        initCustomSearchField()
         initTextDelegate()
         getCategories()
+        createCategoryPicker()
         
         
     }
@@ -44,33 +48,61 @@ class NewQuestionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        initUI()
+        clearUI()
         
     }
     
-    ///
+
     /// Calls the new questions data source to fetch new questions.
-    ///
     func getCategories(){
         let newQuestionsDataSource = NewQuestionDataSource.shared
         newQuestionsDataSource.httpErrorDelegate = self
         newQuestionsDataSource.getAllCategoriyNames { (strings) in
             self.categoryNames = strings
-            self.questionCategoryField.filterStrings(strings)
+//            self.questionCategoryField.filterStrings(strings)
         }
     }
     
+    func createCategoryPicker() {
+        
+        let categoryPicker = UIPickerView()
+        categoryPicker.delegate = self
+        
+        questionCategoryField.inputView = categoryPicker
+        createToolbar()
+    }
+    
+    func createToolbar() {
+        
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(NewQuestionViewController.dismissKeyboard))
+        
+        toolBar.setItems([doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        
+        questionCategoryField.inputAccessoryView = toolBar
+    }
+    
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
     
     ///restarts the UI to its 'clean' state
-    func initUI(){
+    func clearUI(){
         self.view.removeBluerLoader()
         self.scrollVIew.scrollToTop()
         self.instructionTextView.textColor = UIColor.black
         visibleAnswers = 2
         addAnswerButton.isEnabled = true
         questionField.text = ""
-        questionCategoryField.text = ""
+        
+        selectedCategory = ""
+        questionCategoryField.text = selectedCategory
+        
         for index in 0..<answerFieldCollection.count{
             answerFieldCollection[index].text = ""
             if index >= visibleAnswers{
@@ -92,10 +124,6 @@ class NewQuestionViewController: UIViewController {
     }
     ///inits the question category input
     func initCustomSearchField(){
-        questionCategoryField.inlineMode = true
-        questionCategoryField.layer.borderColor = UIColor.darkGray.cgColor
-        questionCategoryField.layer.borderWidth = 1
-        questionCategoryField.layer.cornerRadius = 3
     }
     
     ///setting the textfield delegates as the viewcontroller to handle keyboard hiding when return key is pressed.
@@ -127,8 +155,7 @@ class NewQuestionViewController: UIViewController {
     
     ///grabs the category input
     func grabCategory() -> String{
-        let inputString = questionCategoryField.text ?? ""
-        return inputString
+        return selectedCategory
     }
     
     ///validates that all new question constraints are met, and if are continues to submit in submitQuestion()
@@ -166,6 +193,8 @@ class NewQuestionViewController: UIViewController {
         newQuestion.answers = answers
         newQuestion.categoryName = category
         newQuestion.askerToken = Auth.userToken
+        
+        print(newQuestion.toJSON())
         
         NewQuestionSubmitDelegate.shared.httpErrorDelegate = self
         submitQuestion()
@@ -219,6 +248,31 @@ class NewQuestionViewController: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
+    
+}
+
+extension NewQuestionViewController : UIPickerViewDelegate,UIPickerViewDataSource{
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return categoryNames.count
+    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return categoryNames[row]
+    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
+        selectedCategory = categoryNames[row]
+        questionCategoryField.text = selectedCategory
+    }
     
 }
 
