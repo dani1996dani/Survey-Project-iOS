@@ -66,6 +66,7 @@ class LoginController: UIViewController {
     func onAuthAttempt(response : String){
         self.view.removeBluerLoader()
         if (response.count == 36){
+            self.view.endEditing(true)
             UserDefaults.standard.set(response, forKey: "userToken")
             onLoginDelegate?.onSuccess()
             self.dismiss(animated: true)

@@ -61,6 +61,7 @@ class QuestionsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        tableView.tableFooterView = UIView(frame: .zero)
         if questions.isEmpty{
             refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
             refreshControl.attributedTitle = NSAttributedString(string: "Refreshing...")

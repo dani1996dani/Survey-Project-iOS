@@ -61,6 +61,7 @@ class MyProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        tableView.tableFooterView = UIView(frame: .zero)
         loadData()
     }
     

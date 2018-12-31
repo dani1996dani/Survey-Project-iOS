@@ -16,6 +16,7 @@ class NewQuestionViewController: UIViewController {
     @IBOutlet weak var instructionTextView: UITextView!
     
     var newQuestion = NewQuestion()
+    var categoryPicker : UIPickerView = UIPickerView()
     
     @IBOutlet weak var scrollVIew: UIScrollView!
     
@@ -53,20 +54,20 @@ class NewQuestionViewController: UIViewController {
     }
     
 
-    /// Calls the new questions data source to fetch new questions.
+    /// Calls the new questions data source to fetch category names.
     func getCategories(){
         let newQuestionsDataSource = NewQuestionDataSource.shared
         newQuestionsDataSource.httpErrorDelegate = self
         newQuestionsDataSource.getAllCategoriyNames { (strings) in
             self.categoryNames = strings
+            self.createCategoryPicker()
 //            self.questionCategoryField.filterStrings(strings)
         }
     }
     
     func createCategoryPicker() {
-        
-        let categoryPicker = UIPickerView()
         categoryPicker.delegate = self
+        categoryPicker.reloadAllComponents()
         
         questionCategoryField.inputView = categoryPicker
         createToolbar()
