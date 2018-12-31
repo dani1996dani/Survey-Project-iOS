@@ -61,15 +61,22 @@
                                 <color key="textColor" red="1" green="0.03738073125" blue="0.0064949359160000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="748" image="crowdvote" translatesAutoresizingMaskIntoConstraints="NO" id="4xO-BQ-0zx">
+                                <rect key="frame" x="8" y="28" width="359" height="137"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="4xO-BQ-0zx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="0ql-fZ-xgk"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4xO-BQ-0zx" secondAttribute="trailing" constant="8" id="1uH-DE-V8x"/>
                             <constraint firstItem="dqC-Ck-Dox" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="2Kb-iR-1lX"/>
                             <constraint firstItem="hnp-HR-Gq1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="Jg0-QT-4XD"/>
+                            <constraint firstItem="4xO-BQ-0zx" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="KUd-BY-Dz8"/>
                             <constraint firstItem="hnp-HR-Gq1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fGU-XG-EOB"/>
                             <constraint firstItem="hnp-HR-Gq1" firstAttribute="top" secondItem="dqC-Ck-Dox" secondAttribute="bottom" constant="8" id="hsW-MD-jcg"/>
                             <constraint firstItem="hnp-HR-Gq1" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="mM5-lD-pfs"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dqC-Ck-Dox" secondAttribute="trailing" constant="8" id="rlz-wK-FSm"/>
+                            <constraint firstItem="dqC-Ck-Dox" firstAttribute="top" secondItem="4xO-BQ-0zx" secondAttribute="bottom" constant="8" id="sBh-GV-3Kb"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hnp-HR-Gq1" secondAttribute="trailing" constant="16" id="u7h-bv-MSc"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -798,6 +805,7 @@
     </scenes>
     <resources>
         <image name="back" width="36" height="36"/>
+        <image name="crowdvote" width="1125" height="429"/>
         <image name="person" width="36" height="36"/>
         <image name="plus" width="36" height="36"/>
         <image name="search" width="36" height="36"/>
