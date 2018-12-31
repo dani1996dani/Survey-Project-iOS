@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Survey Server:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/Survey_Server_war</output-path>
+    <root id="archive" name="Survey Server_war.war">
+      <element id="artifact" artifact-name="Survey Server:war exploded" />
+    </root>
+  </artifact>
+</component>
