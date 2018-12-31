@@ -21,7 +21,6 @@ class Auth{
     }
     
     static var userToken : String{
-        print(UserDefaults.standard.string(forKey: "userToken"))
         return UserDefaults.standard.string(forKey: "userToken") ?? ""
     }
     
@@ -29,12 +28,13 @@ class Auth{
     static let usernameTaken = "Username Taken"
     
    
-    
+    ///tries to log in the user with the username and password given, and sends the completion handler a response from the server, or an error message if the the credentials aren't valid.
     func login(username: String, password : String, completion: @escaping (String) -> ()){
             authAttempt(username: username, password: password, using: loginAction, completion: completion)
 
     }
     
+    ///tries to create a new account for the user with the username and password given, and sends the completion handler a response from the server, or an error message if the the credentials aren't valid.
     func register(username : String, password: String, completion: @escaping (String) -> ()){
         if validateCredentials(username: username, password: password){
             authAttempt(username: username, password: password, using: registerAction, completion: completion)
@@ -44,6 +44,7 @@ class Auth{
         }
     }
     
+    ///Validates that the username and password are meeting minimal conditions.
     func validateCredentials(username: String, password : String) -> Bool{
         let usernameLength = username.count
         if usernameLength < 3 || usernameLength > 16 {
@@ -58,15 +59,19 @@ class Auth{
         return true
     }
     
+    ///The actual HTTP request that handles the authentication process for the user.
+    /// - parameters:
+    ///     - username: the username to use in the authentication request.
+    ///     - password: the password to use in the authentication request.
+    ///     - action: the action (login or register) to use in the authentication request.
+    ///     - completion: the completion handler to send the server response back to.
     func authAttempt(username : String, password: String,using action: String,completion: @escaping (String) -> ()){
         var response = ""
-//        let hashedUsername = username.sha256()
         let hashedPassword = password.sha256()
         let urlPath = "\(WebConnectionSettings.HTTP_PROTOCOL)\(WebConnectionSettings.HOST)\(WebConnectionSettings.AUTH_SERVLET)?action=\(action)&\(username_param)=\(username)&\(hashed_password_param)=\(hashedPassword)"
-        print(urlPath)
         let url = URL(string: urlPath)!
         let task = URLSession.shared.dataTask(with: url) { (data, res, error) in
-            guard let data = data else{print("No Data");return;}
+            guard let data = data else{return;}
             response = String(decoding: data, as: UTF8.self)
             
             DispatchQueue.main.async {
@@ -77,10 +82,10 @@ class Auth{
         task.resume()
     }
     
+    ///Logs out the current user from the app by clearing the stored token in UserDefaults.
     static func logout(){
         let userDefaults = UserDefaults.standard
         userDefaults.set("", forKey: "userToken")
-        print(userDefaults.string(forKey: "userToken"))
     }
     
     

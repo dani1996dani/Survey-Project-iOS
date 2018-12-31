@@ -16,10 +16,14 @@ class QuestionDetailDataSource{
     
     static let shared = QuestionDetailDataSource()
     
+    
+    ///Requests a DetailedQuestion object from the server, based on the questionId, and returns the constructed object back to the completion handler.
+    /// - parameters:
+    ///     - quesitonId: the question id to load from the server
+    ///     - completion: the completion handler to send the DetailedQuestion to, for further processing.
     func getDetailedQuestionById(quesitonId : Int,completion : @escaping (DetailedQuestion) -> ()){
         let userToken = UserDefaults.standard.string(forKey: "userToken") ?? ""
         let urlString = "\(WebConnectionSettings.HTTP_PROTOCOL)\(WebConnectionSettings.HOST)\(WebConnectionSettings.QUESTION_SERVLET)?action=get_specific_question&question_id=\(quesitonId)&token=\(userToken)"
-        print(urlString)
         let url = URL(string: urlString)!
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else{return;}
@@ -43,7 +47,7 @@ class QuestionDetailDataSource{
             
             let answers  = json["possibleAnswerList"] as! JSONArray
             var possibleAnswers : [PossibleAnswer] = []
-        
+            
             for answer in answers{
                 let title = answer["answerTitle"] as! String
                 let answerId = answer["answerId"] as! Int
@@ -58,13 +62,7 @@ class QuestionDetailDataSource{
             DispatchQueue.main.async {
                 completion(question)
             }
-
-            
-            
-            
         }
-        
         task.resume()
     }
-    
 }

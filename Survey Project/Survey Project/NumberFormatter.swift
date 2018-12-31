@@ -9,6 +9,8 @@
 import Foundation
 
 class NumberFormatter{
+    
+    ///Formats a number to a String representation. For example, the number 195,345 will be converted to: **195.3K**
     static func format(number: Int)-> String{
         if number < 1000{
             return String(number)

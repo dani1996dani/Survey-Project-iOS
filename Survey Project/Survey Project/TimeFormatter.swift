@@ -9,6 +9,10 @@
 import Foundation
 
 class TimeFormatter{
+    
+    ///converts milliseconds to a readable time duration String. For example for 3000 milliseconds the String that will return is : **3 seconds ago**
+    /// - parameters:
+    ///     - millis: the amount of milliseconds to convert.
     static func millisToTimespan(millis: TimeInterval) -> String{
         let seconds = Int(millis) / 1000;
         if seconds == 0{

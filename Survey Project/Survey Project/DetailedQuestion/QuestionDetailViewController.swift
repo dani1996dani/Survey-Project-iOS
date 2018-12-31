@@ -31,13 +31,31 @@ class QuestionDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initController()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        tableView.tableFooterView = UIView(frame: .zero)
+        
+    }
+    
+    ///Go back to the the QuestionsViewController when the back button is pressed.
+    @IBAction func dismiss(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    ///inits required conditions for the view controller
+    func initController(){
         self.view.showBlurLoader()
         voteDelegate.newAnswersDelegate = self
         voteDelegate.connect(with: question.questionId)
         
         questionTitleLabel.text = question.title
         askedByLabel.text = "Asked By: \(question.user.username)"
-//        totalVotesLabel.text = "Total Votes: \(question.formatedVotesText)"
+        
         QuestionDetailDataSource.shared.getDetailedQuestionById(quesitonId: question.questionId) { (question) in
             self.detailedQuestion = question
             self.answers = question.possibleAnswers
@@ -47,14 +65,7 @@ class QuestionDetailViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        tableView.tableFooterView = UIView(frame: .zero)
-        
-    }
-    @IBAction func dismiss(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-    }
+    
 }
 
 
@@ -73,10 +84,11 @@ extension QuestionDetailViewController : UITableViewDataSource{
         cell.selectionStyle = .none
         let index = indexPath.row
         let answer = answers[index]
+        
+        ///the delegates that allow voting
         cell.websocketVoteDelegate = voteDelegate
         cell.viewControllerVoteDelegate = self
         
-        //        let votedFor = detailedQuestion.votedForAnswerId
         let isVotedFor = answer.answerId == votedForAnswerId
         if isVotedFor {
             if isVotedFor != cell.voteButton.isOn{
@@ -109,12 +121,13 @@ extension QuestionDetailViewController : UITableViewDataSource{
 }
 
 extension QuestionDetailViewController : VoteCellDelegate{
+    ///handles the upvote of an answer
     func didUpvote(questionId: Int, answerId: Int) {
         self.view.showBlurLoader()
         votedForAnswerId = answerId
-        print(votedForAnswerId)
     }
     
+    ///handles the downvote of an answer
     func didDownvote(questionId: Int, answerId: Int) {
         self.view.showBlurLoader()
         votedForAnswerId = -1
@@ -123,6 +136,8 @@ extension QuestionDetailViewController : VoteCellDelegate{
 }
 
 extension QuestionDetailViewController : NewAnswerDataDelegate{
+    
+    ///handles the error when trying to get new answers, shows an alert that suggests to the user to retry the action
     func onError() {
         let alertController = UIHttpError.shared.httpErrorAlert()
         let reconnectAction = UIAlertAction(title: "Retry Connection", style: .default) { (_) in
@@ -133,10 +148,12 @@ extension QuestionDetailViewController : NewAnswerDataDelegate{
         self.present(alertController, animated: true)
     }
     
+    ///updates the answer id the user voted for
     func onNewVotedFor(newVotedFor: Int) {
         votedForAnswerId = newVotedFor
     }
     
+    ///updates the possible answers to the new answers received from the server
     func onNewData(answers: [PossibleAnswer]) {
         self.answers = answers
         self.tableView.reloadData()
@@ -145,6 +162,7 @@ extension QuestionDetailViewController : NewAnswerDataDelegate{
         self.view.removeBluerLoader()
     }
     
+    ///calculates the new total votes of the question, and presents it in the UI
     func calculateTotalVotes(){
         var totalVotes = 0
         for answer in answers{

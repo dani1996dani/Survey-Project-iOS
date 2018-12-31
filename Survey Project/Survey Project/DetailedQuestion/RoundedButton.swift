@@ -37,6 +37,7 @@ class RoundedButton: UIButton {
         activateButton(bool : !isOn)
     }
     
+    ///handles the UI change for a pressed button (activate and deactivate the button in the UI)
     func activateButton(bool : Bool){
         isOn = bool
         let color = isOn ? green : UIColor.clear

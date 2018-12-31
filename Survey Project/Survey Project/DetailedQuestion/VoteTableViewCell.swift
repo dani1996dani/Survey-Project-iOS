@@ -19,9 +19,8 @@ class VoteTableViewCell: UITableViewCell {
     var viewControllerVoteDelegate : VoteCellDelegate?
     
     
-    
+    ///Notifies the voting delegates that a vote button was tapped and sends them the question id and answer id that are in play.
     @IBAction func voteButtonTapped(_ sender: RoundedButton) {
-        print(sender.isOn,answer.answerId)
         if sender.isOn{
             websocketVoteDelegate?.didUpvote(questionId: answer.questionId, answerId: answer.answerId)
             viewControllerVoteDelegate?.didUpvote(questionId: answer.questionId, answerId: answer.answerId)

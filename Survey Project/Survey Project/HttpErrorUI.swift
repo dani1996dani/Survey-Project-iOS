@@ -16,6 +16,7 @@ class UIHttpError{
     
     static let shared = UIHttpError()
     
+    /// - returns: a `UIAlertController` that shows a loss of internet connection.
     func httpErrorAlert() -> UIAlertController{
         return UIAlertController(title: "Lost Connection", message: "Unable to reach our servers.", preferredStyle: .alert)
     }
